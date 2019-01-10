@@ -1,5 +1,18 @@
+import pyttsx3
 
 def extract_round(path):
+    """ Takes a document formatted exactly like the most recent rounds for Yale Certamen, and
+        parses it into an easy-to-use dictionary. Specific text can be accessed by using the 
+        round name, tossup number, question type (tossup/bonus 1/bonus 2), and whether the text
+        is for the question or the answer.
+
+        Arguments:
+        path: the path to the question document
+
+        Returns:
+        newquestions: the parsed dictionary, as described above  
+    """
+
     f = open(path, 'r').read()
     qanda = {}
     questions = {}
@@ -85,9 +98,9 @@ def extract_round(path):
             b1 = 0
             b2 = 0
             for qline in qtext[2:]:
-                if qline[:3] == 'B1:':
+                if qline[:3] == 'B1:': # bonus 1 index
                     b1 = qtext.index(qline)
-                elif qline[:3] == 'B2:':
+                elif qline[:3] == 'B2:': # bonus 2 index
                     b2 = qtext.index(qline)
 
             newquestions[round][questionnumber]['Tossup'] = {}
@@ -106,11 +119,12 @@ def extract_round(path):
                     #nopunct = item[z].translate(['(',')','/', ',', ' ', '-'])
                     nopunct = item[z]
                     #print(nopunct)
-                    if nopunct.upper() == nopunct:
+                    if nopunct.upper() == nopunct: # if the text is uppercase, we have arrived at the text for the answer
                         hold = z
                         break
                     z += 1
 
+                # use the index 'hold' above to split a question into the question text and answer text
                 if item == tossup:
                     newquestions[round][questionnumber]['Tossup']['Q'] = ' '.join(item[:hold])
                     newquestions[round][questionnumber]['Tossup']['A'] = ' '.join(item[hold:])
@@ -120,11 +134,31 @@ def extract_round(path):
                 else:
                     newquestions[round][questionnumber]['Bonus 2']['Q'] = ' '.join(item[:hold])
                     newquestions[round][questionnumber]['Bonus 2']['A'] = ' '.join(item[hold:])
+            
+            # notes for later
             # Eunus and Cleon: bad because bonus 1 and 2 are combined
             # 'tigridos' hint removed
             # what to do for other proctor notes? like 'I will now pause before tossup 20'
 
     return newquestions
+
+def read(engine, rounds, specs):
+    """ Given a dictionary of questions and answers, the computer reads the requested section of text.
+
+        Arguments:
+        engine: the pyttsx3 instance that performs the reading
+        rounds: a dictionary containing a year's worth of rounds
+        specs: a list specifying the particular text to be read
+
+        Returns:
+        None
+    """
+    text = rounds[specs[0]][specs[1]][specs[2]][specs[3]]
+    engine.say(text.lower()) # changing to lowercase avoids issues where uppercase is read as an abbreviation
+    # print(text)
+    engine.runAndWait()
+
+    return None
 
 
 if __name__ == '__main__':
@@ -133,12 +167,17 @@ if __name__ == '__main__':
     yaleadv18 = extract_round(p)
 
     #test cases
-    print(yaleadv18['Finals']['Info'])
+    # print(yaleadv18['Finals']['Info'])
     # for round in ['Round 1', 'Round 2', 'Round 3', 'Semis', 'Finals']:
     #     for q in range(1, 21):
     #         for format in ['Tossup', 'Bonus 1', 'Bonus 2']:
     #             for qa in ['Q', 'A']:
     #                 print(yaleadv18[round][q][format][qa])
-    print(yaleadv18['Round 1'][5]['Tossup']['Q'])
-    print(yaleadv18['Finals'][20]['Bonus 1']['A'])
-    print(yaleadv18['Semis'][10]['Bonus 2']['Q'])
+    # print(yaleadv18['Round 1'][5]['Tossup']['A'])
+    # print(yaleadv18['Finals'][20]['Bonus 1']['A'])
+    # print(yaleadv18['Semis'][10]['Bonus 2']['Q'])
+
+    specs = ['Round 1', 15, 'Tossup', 'Q']
+    engine = pyttsx3.init()
+    
+    read(engine, yaleadv18, specs)
