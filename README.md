@@ -1,2 +1,2 @@
 # certamen
-The plan is to create an online system for playing certamen, a competitive Latin quiz bowl game. Thus far, I have written code to take a document of certamen questions and parse them into dictionaries to make specific questions and answers easily accessible.
+This is an implementation of a digital system for playing certamen, a competitive Latin quiz bowl game about Ancient Roman language, history, mythology, literature, and culture. The game consists of 20 tossups, each of which has 2 boni that can be answered if the tossup was answered correctly.
