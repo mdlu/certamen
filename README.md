@@ -1,2 +1,2 @@
 # certamen
-This is an implementation of a digital system for playing certamen, a competitive Latin quiz bowl game about Ancient Roman language, history, mythology, literature, and culture. The game consists of 20 tossups, each of which has 2 boni that can be answered if the tossup was answered correctly.
+This is a partial implementation of a digital system for playing certamen, a competitive Latin quiz bowl game about Ancient Roman language, history, mythology, literature, and culture. The game consists of 20 tossups, each of which has 2 boni that can be answered if the tossup was answered correctly. The full set of rules can be found here: https://www.njcl.org/Portals/1/2017%20NJCL%20Certamen%20Rules.pdf
